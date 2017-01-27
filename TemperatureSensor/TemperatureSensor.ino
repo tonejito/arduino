@@ -6,6 +6,7 @@
  + LM35DT - OUTPUT on A6
  + LM35DT - GND on A7 (bridged to common GND)
  + LM35DT - INPUT on +5V
+ + Blue LED (+) on D09
  + Green LED (+) on D10
  + Yellow LED (+) on D11
  + Red LED (+) on D12
@@ -25,6 +26,8 @@ int L = 13;         // Arduino L PIN
 int R = 12;         // Red LED
 int Y = 11;         // Yellow LED
 int G = 10;         // Green LED
+int B =  9;         // Blue LED
+int ledGND = 7;
 
 float mv = 0.0;     // milliVolts read
 float C = 0.0;      // Centigrade degrees
@@ -39,12 +42,15 @@ void setup()
   pinMode(R, OUTPUT);
   pinMode(Y, OUTPUT);
   pinMode(G, OUTPUT);
+  pinMode(B, OUTPUT);
+  pinMode(ledGND, OUTPUT);
 }
 
 void loop()
 {
   // Lock the sensor GND pin to ground
   digitalWrite(sensorGND, LOW);
+  digitalWrite(ledGND, LOW);
   
   // Read data from the sensor
   mv = ( analogRead(sensorPin) / 1024.0 ) * 5000;
@@ -56,11 +62,16 @@ void loop()
 
   // Give heartbeat feedback
   digitalWrite(L, HIGH);
-  delay(10);
+  delay(mv);
   digitalWrite(L, LOW);
-  delay(990);
+  delay(1000-mv);
 
   // Display output on the leds
+  if (C > 0.0) // Cool
+    digitalWrite(B, HIGH);
+  else
+    digitalWrite(B, LOW);
+
   if (C > 25.0) // Normal
     digitalWrite(G, HIGH);
   else
@@ -76,4 +87,3 @@ void loop()
   else
     digitalWrite(R, LOW);
 }
-
