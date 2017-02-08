@@ -6,6 +6,7 @@
  + LM35DT - OUTPUT on A6
  + LM35DT - GND on A7 (bridged to common GND)
  + LM35DT - INPUT on +5V
+ + White LED (+) on D08
  + Blue LED (+) on D09
  + Green LED (+) on D10
  + Yellow LED (+) on D11
@@ -27,6 +28,7 @@ int R = 12;         // Red LED
 int Y = 11;         // Yellow LED
 int G = 10;         // Green LED
 int B =  9;         // Blue LED
+int W =  8;         // White LED
 int ledGND = 7;
 
 float mv = 0.0;     // milliVolts read
@@ -43,6 +45,7 @@ void setup()
   pinMode(Y, OUTPUT);
   pinMode(G, OUTPUT);
   pinMode(B, OUTPUT);
+  pinMode(W, OUTPUT);
   pinMode(ledGND, OUTPUT);
 }
 
@@ -67,7 +70,12 @@ void loop()
   delay(1000-mv);
 
   // Display output on the leds
-  if (C > 0.0) // Cool
+  if (C > 0.0) // Cold
+    digitalWrite(W, HIGH);
+  else
+    digitalWrite(W, LOW);
+
+  if (C > 15.0) // Cool
     digitalWrite(B, HIGH);
   else
     digitalWrite(B, LOW);
@@ -87,3 +95,4 @@ void loop()
   else
     digitalWrite(R, LOW);
 }
+
